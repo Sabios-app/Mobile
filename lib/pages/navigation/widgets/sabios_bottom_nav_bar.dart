@@ -4,11 +4,13 @@ import '../../../core/theme/app_colors.dart';
 class SabiosBottomNavBar extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
+  final int unreadMessagesCount;
 
   const SabiosBottomNavBar({
     super.key,
     required this.currentIndex,
     required this.onTap,
+    this.unreadMessagesCount = 0,
   });
 
   @override
@@ -17,7 +19,12 @@ class SabiosBottomNavBar extends StatelessWidget {
       _NavItem(icon: Icons.home_outlined, activeIcon: Icons.home_rounded, label: 'Início'),
       _NavItem(icon: Icons.search_rounded, activeIcon: Icons.search_rounded, label: 'Explorar'),
       _NavItem(icon: Icons.calendar_today_outlined, activeIcon: Icons.calendar_today_rounded, label: 'Agenda'),
-      _NavItem(icon: Icons.chat_bubble_outline_rounded, activeIcon: Icons.chat_bubble_rounded, label: 'Mensagens', badgeCount: 2),
+      _NavItem(
+        icon: Icons.chat_bubble_outline_rounded,
+        activeIcon: Icons.chat_bubble_rounded,
+        label: 'Mensagens',
+        badgeCount: unreadMessagesCount > 0 ? unreadMessagesCount : null,
+      ),
       _NavItem(icon: Icons.person_outline_rounded, activeIcon: Icons.person_rounded, label: 'Perfil'),
     ];
 
@@ -43,7 +50,6 @@ class SabiosBottomNavBar extends StatelessWidget {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-
                       if (isActive)
                         Positioned(
                           top: 0,
