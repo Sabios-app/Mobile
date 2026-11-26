@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/brand_logo.dart';
+import '../../../services/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
+  final String role;
   final VoidCallback onBack;
   final VoidCallback onContinue;
   final VoidCallback onGoToLogin;
 
   const RegisterPage({
     super.key,
+    required this.role,
     required this.onBack,
     required this.onContinue,
     required this.onGoToLogin,
@@ -21,10 +24,11 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController(text: 'Marina Costa');
-  final _emailController = TextEditingController(text: 'marina@cafeaurora.com.br');
-  final _passwordController = TextEditingController(text: 'sabios123');
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -34,9 +38,26 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
-  void _handleSubmit() {
-    if (_formKey.currentState?.validate() ?? false) {
-      widget.onContinue();
+
+  Future<void> _handleSubmit() async {
+    if (_isLoading || !(_formKey.currentState?.validate() ?? false)) return;
+
+    setState(() => _isLoading = true);
+    try {
+      await AuthService.register(
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+        role: widget.role,
+      );
+      if (mounted) widget.onContinue();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -182,7 +203,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: _handleSubmit,
+                            onPressed: _isLoading ? null : _handleSubmit,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryTeal,
                               foregroundColor: Colors.white,

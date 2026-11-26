@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/network_avatar.dart';
+import '../../../services/auth_service.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  final VoidCallback? onLogout;
+
+  const ProfilePage({super.key, this.onLogout});
 
   @override
   Widget build(BuildContext context) {
@@ -181,6 +184,53 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 28),
+
+            // Botão de Logout Limpo
+            OutlinedButton.icon(
+              onPressed: () async {
+                final confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: const Text('Sair da conta'),
+                    content: const Text('Deseja realmente desconectar?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(ctx).pop(false),
+                        child: const Text('Cancelar'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(ctx).pop(true),
+                        child: const Text('Sair', style: TextStyle(color: Colors.red)),
+                      ),
+                    ],
+                  ),
+                );
+
+                if (confirm == true) {
+                  await AuthService.logout();
+                  if (onLogout != null) {
+                    onLogout!();
+                  }
+                }
+              },
+              icon: const Icon(Icons.logout_rounded, color: Colors.redAccent),
+              label: const Text(
+                'Sair da conta',
+                style: TextStyle(
+                  color: Colors.redAccent,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: Colors.redAccent),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
+            ),
+
+            const SizedBox(height: 20),
 
             const Center(
               child: Text(
