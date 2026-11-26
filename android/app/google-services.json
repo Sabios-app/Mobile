@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "782346093526",
+    "project_id": "sabios-1d477",
+    "storage_bucket": "sabios-1d477.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:782346093526:android:7bce06d13b53378b7e5a77",
+        "android_client_info": {
+          "package_name": "com.sabios.app.sabios_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwOEdpDV-ybUMrklVcgJ9SyhWcItD4u6Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -7,7 +7,12 @@ import '../../profile/views/profile_page.dart';
 import '../widgets/sabios_bottom_nav_bar.dart';
 
 class MainNavigationScreen extends StatefulWidget {
-  const MainNavigationScreen({super.key});
+  final VoidCallback? onLogout;
+
+  const MainNavigationScreen({
+    super.key,
+    this.onLogout,
+  });
 
   @override
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
@@ -29,7 +34,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       const ExplorePage(),
       AgendaPage(onScheduleNew: () => _onTabChanged(1)),
       const MessagesPage(),
-      const ProfilePage(),
+      ProfilePage(onLogout: widget.onLogout),
     ];
 
     return Scaffold(

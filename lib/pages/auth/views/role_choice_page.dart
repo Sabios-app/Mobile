@@ -105,7 +105,7 @@ class RoleChoicePage extends StatelessWidget {
               title: 'Quero ser conselheiro',
               description: 'Quero compartilhar minha experiência, gerar impacto e ter uma renda extra.',
               actionLabel: 'Compartilhar experiência',
-              onTap: () => onChooseRole('advisor'),
+              onTap: () => onChooseRole('COUNSELOR'),
             ),
             const SizedBox(height: 24),
 

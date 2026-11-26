@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/brand_logo.dart';
+import '../../../services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback onBack;
@@ -21,9 +22,11 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController(text: 'marina@cafeaurora.com.br');
-  final _passwordController = TextEditingController(text: 'sabios123');
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoading = false;
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
@@ -32,9 +35,27 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _handleSubmit() {
-    if (_formKey.currentState?.validate() ?? false) {
-      widget.onContinue();
+  Future<void> _handleSubmit() async {
+    if (_isSubmitting || _isLoading) return;
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+
+    _isSubmitting = true;
+    setState(() => _isLoading = true);
+
+    try {
+      await AuthService.login(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+      if (mounted) widget.onContinue();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    } finally {
+      _isSubmitting = false;
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -192,7 +213,7 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: _handleSubmit,
+                            onPressed: _isLoading ? null : _handleSubmit,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryTeal,
                               foregroundColor: Colors.white,
