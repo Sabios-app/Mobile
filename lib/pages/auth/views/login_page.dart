@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/services/api_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/brand_logo.dart';
@@ -21,9 +22,11 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController(text: 'marina@cafeaurora.com.br');
-  final _passwordController = TextEditingController(text: 'sabios123');
+  final _emailController = TextEditingController(text: '');
+  final _passwordController = TextEditingController(text: '');
   bool _obscurePassword = true;
+  bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   void dispose() {
@@ -32,9 +35,34 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _handleSubmit() {
-    if (_formKey.currentState?.validate() ?? false) {
-      widget.onContinue();
+  Future<void> _handleSubmit() async {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      await ApiService.login(
+        _emailController.text.trim(),
+        _passwordController.text,
+      );
+      if (mounted) {
+        widget.onContinue();
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _errorMessage = e.toString().replaceFirst('Exception: ', '');
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -189,10 +217,31 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 24),
 
 
+                        if (_errorMessage != null) ...[
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.red.shade50,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.red.shade200),
+                            ),
+                            child: Text(
+                              _errorMessage!,
+                              style: TextStyle(
+                                color: Colors.red.shade800,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: _handleSubmit,
+                            onPressed: _isLoading ? null : _handleSubmit,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryTeal,
                               foregroundColor: Colors.white,
@@ -203,20 +252,29 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               shadowColor: AppColors.primaryTeal.withValues(alpha: 0.25),
                             ),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Entrar',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
+                            child: _isLoading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Entrar',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                      SizedBox(width: 8),
+                                      Icon(Icons.arrow_forward_rounded, size: 18),
+                                    ],
                                   ),
-                                ),
-                                SizedBox(width: 8),
-                                Icon(Icons.arrow_forward_rounded, size: 18),
-                              ],
-                            ),
                           ),
                         ),
                         const SizedBox(height: 16),

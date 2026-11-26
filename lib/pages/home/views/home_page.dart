@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/services/api_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/home_header.dart';
 import '../widgets/greeting_section.dart';
@@ -21,17 +22,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const _userName = 'Marina Costa';
-  static const _userAvatar = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=faces&fit=crop&w=200&h=200&q=85';
-  static const _session = UpcomingSession(
-    title: 'Fluxo de caixa sem complicação',
-    mentorName: 'Helena Martins',
-    mentorRole: 'Finanças & Gestão',
-    mentorImage: 'https://images.unsplash.com/photo-1758691737605-69a0e78bd193?crop=faces&fit=crop&w=200&h=200&q=85',
-    time: '15h',
-    duration: '60 min',
-    dateBadge: 'Hoje',
-  );
+  String _userName = 'Marina Costa';
+  String _userAvatar = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=faces&fit=crop&w=200&h=200&q=85';
+  UpcomingSession? _session;
   static const _carlos = Mentor(
     id: 'carlos',
     name: 'Carlos Almeida',
@@ -45,16 +38,78 @@ class _HomePageState extends State<HomePage> {
     bio: 'Liderou times comerciais por mais de 28 anos no varejo e atacado.',
   );
 
-  List<TaskItem> _tasks = const [
-    TaskItem(id: '1', title: 'Revisar despesas fixas', dueDate: 'Até sexta-feira', isCompleted: true),
-    TaskItem(id: '2', title: 'Separar contas pessoais', dueDate: 'Até 18 de junho'),
-    TaskItem(id: '3', title: 'Projetar caixa para 90 dias', dueDate: 'Até 21 de junho'),
+  List<TaskItem> _tasks = [
+    const TaskItem(id: '1', title: 'Revisar despesas fixas', dueDate: 'Até sexta-feira', isCompleted: true),
+    const TaskItem(id: '2', title: 'Separar contas pessoais', dueDate: 'Até 18 de junho'),
+    const TaskItem(id: '3', title: 'Projetar caixa para 90 dias', dueDate: 'Até 21 de junho'),
   ];
   bool _notificationsOpen = false;
   final List<NotificationItem> _notifications = const [
     NotificationItem(id: 'n1', title: 'Sessão confirmada', message: 'Helena confirmou sua sessão de hoje, às 15h.', time: 'Há 10 min'),
     NotificationItem(id: 'n2', title: 'Nova mensagem de Carlos', message: 'Vamos retomar aquele plano de vendas?', time: 'Ontem'),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBackendData();
+  }
+
+  Future<void> _loadBackendData() async {
+    // 1. Carregar usuário autenticado
+    final user = await ApiService.getUser();
+    if (user != null && mounted) {
+      setState(() {
+        _userName = user['name'] ?? _userName;
+        if (user['avatarUrl'] != null) {
+          _userAvatar = user['avatarUrl'];
+        }
+      });
+    }
+
+    // 2. Carregar próxima mentoria
+    try {
+      final next = await ApiService.getNextMentoring();
+      if (next != null && mounted) {
+        final specialist = next['specialist'];
+        final specUser = specialist != null ? specialist['user'] : null;
+        final dateStr = next['scheduledAt']?.toString() ?? '';
+        final parsedDate = DateTime.tryParse(dateStr);
+        final hour = parsedDate != null ? '${parsedDate.hour}h' : '15h';
+
+        setState(() {
+          _session = UpcomingSession(
+            title: next['title'] ?? 'Mentoria Estratégica',
+            mentorName: specUser?['name'] ?? 'Conselheiro Sábios',
+            mentorRole: specialist?['specialty'] ?? 'Consultoria',
+            mentorImage: specUser?['avatarUrl'] ?? 'https://images.unsplash.com/photo-1758691737605-69a0e78bd193?crop=faces&fit=crop&w=200&h=200&q=85',
+            time: hour,
+            duration: '60 min',
+            dateBadge: 'Confirmada',
+          );
+        });
+      }
+    } catch (_) {}
+
+    // 3. Carregar planos de ação
+    try {
+      final plans = await ApiService.listActionPlans();
+      if (plans.isNotEmpty && mounted) {
+        setState(() {
+          _tasks = plans.map((p) {
+            return TaskItem(
+              id: p['id'].toString(),
+              title: p['title'] ?? '',
+              dueDate: p['deadline'] != null
+                  ? 'Prazo: ${p['deadline'].toString().split('T').first}'
+                  : 'Em andamento',
+              isCompleted: p['completed'] == true,
+            );
+          }).toList();
+        });
+      }
+    } catch (_) {}
+  }
 
   int get _progressPercentage {
     if (_tasks.isEmpty) return 0;
@@ -66,6 +121,11 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _tasks = _tasks.map((t) => t.id == id ? t.copyWith(isCompleted: !t.isCompleted) : t).toList();
     });
+
+    final intId = int.tryParse(id);
+    if (intId != null) {
+      ApiService.toggleActionPlan(intId).catchError((_) {});
+    }
   }
 
   void _toggleNotifications() => setState(() => _notificationsOpen = !_notificationsOpen);
@@ -115,11 +175,13 @@ class _HomePageState extends State<HomePage> {
                   userAvatarUrl: _userAvatar,
                   onAvatarTap: () => widget.onNavigateToTab?.call(4),
                 ),
-                NextSessionCard(
-                  session: _session,
-                  onEnterRoom: _onEnterRoom,
-                ),
-                const SizedBox(height: 28),
+                if (_session != null) ...[
+                  NextSessionCard(
+                    session: _session!,
+                    onEnterRoom: _onEnterRoom,
+                  ),
+                  const SizedBox(height: 28),
+                ],
                 ActionPlanSection(
                   tasks: _tasks,
                   progressPercentage: _progressPercentage,
