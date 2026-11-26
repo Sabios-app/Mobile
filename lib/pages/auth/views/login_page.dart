@@ -26,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _isLoading = false;
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
@@ -35,9 +36,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _handleSubmit() async {
-    if (_isLoading || !(_formKey.currentState?.validate() ?? false)) return;
+    if (_isSubmitting || _isLoading) return;
+    if (!(_formKey.currentState?.validate() ?? false)) return;
 
+    _isSubmitting = true;
     setState(() => _isLoading = true);
+
     try {
       await AuthService.login(
         email: _emailController.text.trim(),
@@ -50,6 +54,7 @@ class _LoginPageState extends State<LoginPage> {
         SnackBar(content: Text(e.toString())),
       );
     } finally {
+      _isSubmitting = false;
       if (mounted) setState(() => _isLoading = false);
     }
   }
@@ -208,7 +213,7 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: _handleSubmit,
+                            onPressed: _isLoading ? null : _handleSubmit,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryTeal,
                               foregroundColor: Colors.white,
