@@ -29,14 +29,6 @@ class MentoringModel {
   bool get isConfirmed => status.toUpperCase() == 'CONFIRMED';
   bool get isCompleted => status.toUpperCase() == 'COMPLETED';
 
-  static DateTime? _parseBrazilLocalDateTime(dynamic raw) {
-    if (raw == null) return null;
-    final parsed = DateTime.tryParse(raw.toString());
-    if (parsed == null) return null;
-    final br = parsed.toUtc().subtract(const Duration(hours: 3));
-    return DateTime(br.year, br.month, br.day, br.hour, br.minute, br.second);
-  }
-
   factory MentoringModel.fromJson(Map<String, dynamic> json) {
     return MentoringModel(
       id: json['id']?.toString() ?? '',
@@ -50,9 +42,13 @@ class MentoringModel {
       description: json['description']?.toString(),
       doubts: json['doubts']?.toString(),
       status: json['status']?.toString() ?? 'CONFIRMED',
-      scheduledAt: _parseBrazilLocalDateTime(json['scheduledAt']),
+      scheduledAt: json['scheduledAt'] != null
+          ? DateTime.tryParse(json['scheduledAt'].toString())
+          : null,
       meetingLink: json['meetingLink']?.toString(),
-      createdAt: _parseBrazilLocalDateTime(json['createdAt']),
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'].toString())
+          : null,
     );
   }
 }

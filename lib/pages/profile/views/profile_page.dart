@@ -3,20 +3,20 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/network_avatar.dart';
 import '../../../services/auth_service.dart';
+import '../../../services/user_service.dart';
+import '../../../models/user_model.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   final VoidCallback? onLogout;
 
   const ProfilePage({super.key, this.onLogout});
 
   @override
-<<<<<<< Updated upstream
-=======
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  UserModel? _user = UserService.currentUser;
+  UserModel? _user;
 
   @override
   void initState() {
@@ -34,66 +34,49 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   @override
->>>>>>> Stashed changes
   Widget build(BuildContext context) {
-    final isCounselor = _user?.isCounselor ?? false;
-
     final menuItems = [
       _ProfileOption(
         icon: Icons.business_center_outlined,
         title: 'Dados profissionais',
-<<<<<<< Updated upstream
-        subtitle: 'Café Aurora',
-=======
-        subtitle: isCounselor ? 'Perfil de especialista' : 'Informações da conta',
->>>>>>> Stashed changes
+        subtitle: _user?.isCounselor == true ? 'Conselheiro Especialista' : 'Café Aurora',
       ),
-      if (!isCounselor)
-        const _ProfileOption(
-          icon: Icons.favorite_border_rounded,
-          title: 'Especialistas favoritos',
-          subtitle: 'Conselheiros salvos',
-        ),
-      const _ProfileOption(
+      _ProfileOption(
+        icon: Icons.favorite_border_rounded,
+        title: 'Especialistas favoritos',
+        subtitle: '3 salvos',
+      ),
+      _ProfileOption(
         icon: Icons.receipt_long_outlined,
         title: 'Pagamentos e recibos',
         subtitle: 'Ver histórico',
       ),
-      const _ProfileOption(
+      _ProfileOption(
         icon: Icons.settings_outlined,
         title: 'Preferências',
         subtitle: 'Notificações e acesso',
       ),
     ];
 
-<<<<<<< Updated upstream
-=======
-    final name = _user?.name ?? '';
-    final roleTitle = isCounselor ? 'CONTA DE CONSELHEIRO' : 'CONTA DE CLIENTE';
-    final email = _user?.email ?? '';
-    final avatar = _user?.avatarUrl ?? '';
-    final roleBadge = _user?.role ?? '';
+    final name = _user?.name.isNotEmpty == true ? _user!.name : 'Marina Costa';
+    final roleTitle = _user?.isCounselor == true ? 'CONTA DE CONSELHEIRO' : 'CONTA DE CLIENTE';
+    final email = _user?.email.isNotEmpty == true ? _user!.email : 'marina@cafeaurora.com.br';
+    final avatar = _user?.avatarUrl ?? 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=faces&fit=crop&w=200&h=200&q=85';
 
->>>>>>> Stashed changes
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          children: [
-            const Text('CONTA DE CLIENTE', style: AppTextStyles.eyebrow),
-            const SizedBox(height: 6),
-            const Text('Seu perfil', style: AppTextStyles.heading1),
-            const SizedBox(height: 18),
+        child: RefreshIndicator(
+          onRefresh: _loadUser,
+          color: AppColors.primaryTeal,
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            children: [
+              Text(roleTitle, style: AppTextStyles.eyebrow),
+              const SizedBox(height: 6),
+              const Text('Seu perfil', style: AppTextStyles.heading1),
+              const SizedBox(height: 18),
 
-<<<<<<< Updated upstream
-
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: AppColors.primaryTeal,
-                borderRadius: BorderRadius.circular(24),
-=======
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -132,221 +115,136 @@ class _ProfilePageState extends State<ProfilePage> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          if (roleBadge.isNotEmpty) ...[
-                            const SizedBox(height: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(999),
-                              ),
-                              child: Text(
-                                roleBadge,
-                                style: const TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.accentGoldLight,
-                                ),
+                          const SizedBox(height: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(999),
+                            ),
+                            child: Text(
+                              _user?.role ?? 'CLIENTE',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.accentGoldLight,
                               ),
                             ),
-                          ],
+                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
->>>>>>> Stashed changes
               ),
-              child: Row(
-                children: [
-                  const NetworkAvatar(
-                    imageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=faces&fit=crop&w=200&h=200&q=85',
-                    name: 'Marina Costa',
-                    size: 72,
-                    borderRadius: 20,
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Marina Costa',
-                          style: TextStyle(
-                            fontFamily: AppTextStyles.serifFamily,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        const Text(
-                          'Café Aurora',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: AppColors.textWhite70,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(999),
-                          ),
-                          child: const Text(
-                            'Perfil 80% completo',
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.accentGoldLight,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: AppColors.borderLight),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.zero,
-                  itemCount: menuItems.length,
-                  separatorBuilder: (ctx, idx) => const Divider(height: 1, color: AppColors.divider),
-                  itemBuilder: (context, index) {
-                    final item = menuItems[index];
-                    return InkWell(
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${item.title} em breve!'),
-                            backgroundColor: AppColors.primaryTeal,
-                          ),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 44,
-                              height: 44,
-                              decoration: BoxDecoration(
-                                color: AppColors.surfaceSage,
-                                borderRadius: BorderRadius.circular(14),
-                              ),
-                              alignment: Alignment.center,
-                              child: Icon(item.icon, color: AppColors.primaryTeal, size: 22),
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item.title,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.textPrimary,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    item.subtitle,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: AppColors.textSecondary,
-                                    ),
-                                  ),
-                                ],
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: AppColors.borderLight),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                    itemCount: menuItems.length,
+                    separatorBuilder: (ctx, idx) => const Divider(height: 1, color: AppColors.divider),
+                    itemBuilder: (context, index) {
+                      final item = menuItems[index];
+                      return InkWell(
+                        onTap: () {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('${item.title} em breve!'),
+                              backgroundColor: AppColors.primaryTeal,
+                              duration: const Duration(seconds: 2),
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            const Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              size: 14,
-                              color: AppColors.textPlaceholder,
-                            ),
-                          ],
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: AppColors.surfaceWarmGray,
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                alignment: Alignment.center,
+                                child: Icon(item.icon, color: AppColors.primaryTeal, size: 22),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item.title,
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.textPrimary,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      item.subtitle,
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        color: AppColors.textSecondary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Icon(Icons.chevron_right_rounded, color: AppColors.textPlaceholder),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 28),
+              const SizedBox(height: 20),
 
-            // Botão de Logout Limpo
-            OutlinedButton.icon(
-              onPressed: () async {
-                final confirm = await showDialog<bool>(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    title: const Text('Sair da conta'),
-                    content: const Text('Deseja realmente desconectar?'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(ctx).pop(false),
-                        child: const Text('Cancelar'),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.of(ctx).pop(true),
-                        child: const Text('Sair', style: TextStyle(color: Colors.red)),
-                      ),
-                    ],
-                  ),
-                );
-
-                if (confirm == true) {
+              OutlinedButton.icon(
+                onPressed: () async {
                   await AuthService.logout();
-                  if (onLogout != null) {
-                    onLogout!();
-                  }
-                }
-              },
-              icon: const Icon(Icons.logout_rounded, color: Colors.redAccent),
-              label: const Text(
-                'Sair da conta',
-                style: TextStyle(
-                  color: Colors.redAccent,
-                  fontWeight: FontWeight.w600,
+                  UserService.clearUser();
+                  widget.onLogout?.call();
+                },
+                icon: const Icon(Icons.logout_rounded, color: Colors.redAccent),
+                label: const Text(
+                  'Sair da conta',
+                  style: TextStyle(
+                    color: Colors.redAccent,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Colors.redAccent, width: 1.5),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
               ),
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Colors.redAccent),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 14),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            const Center(
-              child: Text(
-                'Sábios versão 1.0 • Feito para ser simples',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            ),
-          ],
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );
@@ -358,7 +256,7 @@ class _ProfileOption {
   final String title;
   final String subtitle;
 
-  _ProfileOption({
+  const _ProfileOption({
     required this.icon,
     required this.title,
     required this.subtitle,
