@@ -4,21 +4,87 @@ import '../../../core/theme/app_colors.dart';
 class SabiosBottomNavBar extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
+<<<<<<< Updated upstream
+=======
+  final int unreadMessagesCount;
+  final bool isCounselor;
+>>>>>>> Stashed changes
 
   const SabiosBottomNavBar({
     super.key,
     required this.currentIndex,
     required this.onTap,
+<<<<<<< Updated upstream
+=======
+    this.unreadMessagesCount = 0,
+    this.isCounselor = false,
+>>>>>>> Stashed changes
   });
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< Updated upstream
     final navItems = [
       _NavItem(icon: Icons.home_outlined, activeIcon: Icons.home_rounded, label: 'Início'),
       _NavItem(icon: Icons.search_rounded, activeIcon: Icons.search_rounded, label: 'Explorar'),
       _NavItem(icon: Icons.calendar_today_outlined, activeIcon: Icons.calendar_today_rounded, label: 'Agenda'),
       _NavItem(icon: Icons.chat_bubble_outline_rounded, activeIcon: Icons.chat_bubble_rounded, label: 'Mensagens', badgeCount: 2),
       _NavItem(icon: Icons.person_outline_rounded, activeIcon: Icons.person_rounded, label: 'Perfil'),
+=======
+    final badge = unreadMessagesCount > 0 ? unreadMessagesCount : null;
+
+    final navItems = isCounselor
+        ? [
+      _NavItem(
+        icon: Icons.home_outlined,
+        activeIcon: Icons.home_rounded,
+        label: 'Início',
+      ),
+      _NavItem(
+        icon: Icons.calendar_today_outlined,
+        activeIcon: Icons.calendar_today_rounded,
+        label: 'Agenda',
+      ),
+      _NavItem(
+        icon: Icons.chat_bubble_outline_rounded,
+        activeIcon: Icons.chat_bubble_rounded,
+        label: 'Mensagens',
+        badgeCount: badge,
+      ),
+      _NavItem(
+        icon: Icons.person_outline_rounded,
+        activeIcon: Icons.person_rounded,
+        label: 'Perfil',
+      ),
+    ]
+        : [
+      _NavItem(
+        icon: Icons.home_outlined,
+        activeIcon: Icons.home_rounded,
+        label: 'Início',
+      ),
+      _NavItem(
+        icon: Icons.search_rounded,
+        activeIcon: Icons.search_rounded,
+        label: 'Explorar',
+      ),
+      _NavItem(
+        icon: Icons.calendar_today_outlined,
+        activeIcon: Icons.calendar_today_rounded,
+        label: 'Agenda',
+      ),
+      _NavItem(
+        icon: Icons.chat_bubble_outline_rounded,
+        activeIcon: Icons.chat_bubble_rounded,
+        label: 'Mensagens',
+        badgeCount: badge,
+      ),
+      _NavItem(
+        icon: Icons.person_outline_rounded,
+        activeIcon: Icons.person_rounded,
+        label: 'Perfil',
+      ),
+>>>>>>> Stashed changes
     ];
 
     return Container(
@@ -76,12 +142,18 @@ class SabiosBottomNavBar extends StatelessWidget {
                                   top: -3,
                                   right: -8,
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4.5, vertical: 1.5),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 4.5,
+                                      vertical: 1.5,
+                                    ),
                                     decoration: BoxDecoration(
                                       color: AppColors.notificationDot,
                                       borderRadius: BorderRadius.circular(10),
                                     ),
-                                    constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                                    constraints: const BoxConstraints(
+                                      minWidth: 16,
+                                      minHeight: 16,
+                                    ),
                                     child: Text(
                                       '${item.badgeCount}',
                                       textAlign: TextAlign.center,
