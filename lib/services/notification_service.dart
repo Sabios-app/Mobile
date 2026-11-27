@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:sabios_app/services/push_event_bus.dart';
 
 import '../main.dart';
 import '../pages/agenda/views/agenda_page.dart';
@@ -89,7 +88,6 @@ class NotificationService {
     // 1. Mensagens com o app em primeiro plano (Foreground)
     FirebaseMessaging.onMessage.listen((message) {
       debugPrint('[NotificationService] Mensagem FCM recebida em foreground: ${message.messageId}');
-      PushEventBus.emit(message);
       _mostrarNotificacaoLocal(message);
     });
     debugPrint('[NotificationService] Listener de mensagens em foreground configurado.');

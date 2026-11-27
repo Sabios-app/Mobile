@@ -10,71 +10,30 @@ class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key, this.onLogout});
 
   @override
-<<<<<<< Updated upstream
-=======
-  State<ProfilePage> createState() => _ProfilePageState();
-}
-
-class _ProfilePageState extends State<ProfilePage> {
-  UserModel? _user = UserService.currentUser;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUser();
-  }
-
-  Future<void> _loadUser() async {
-    final user = await UserService.getMe();
-    if (mounted) {
-      setState(() {
-        _user = user;
-      });
-    }
-  }
-
-  @override
->>>>>>> Stashed changes
   Widget build(BuildContext context) {
-    final isCounselor = _user?.isCounselor ?? false;
-
     final menuItems = [
       _ProfileOption(
         icon: Icons.business_center_outlined,
         title: 'Dados profissionais',
-<<<<<<< Updated upstream
         subtitle: 'Café Aurora',
-=======
-        subtitle: isCounselor ? 'Perfil de especialista' : 'Informações da conta',
->>>>>>> Stashed changes
       ),
-      if (!isCounselor)
-        const _ProfileOption(
-          icon: Icons.favorite_border_rounded,
-          title: 'Especialistas favoritos',
-          subtitle: 'Conselheiros salvos',
-        ),
-      const _ProfileOption(
+      _ProfileOption(
+        icon: Icons.favorite_border_rounded,
+        title: 'Especialistas favoritos',
+        subtitle: '3 salvos',
+      ),
+      _ProfileOption(
         icon: Icons.receipt_long_outlined,
         title: 'Pagamentos e recibos',
         subtitle: 'Ver histórico',
       ),
-      const _ProfileOption(
+      _ProfileOption(
         icon: Icons.settings_outlined,
         title: 'Preferências',
         subtitle: 'Notificações e acesso',
       ),
     ];
 
-<<<<<<< Updated upstream
-=======
-    final name = _user?.name ?? '';
-    final roleTitle = isCounselor ? 'CONTA DE CONSELHEIRO' : 'CONTA DE CLIENTE';
-    final email = _user?.email ?? '';
-    final avatar = _user?.avatarUrl ?? '';
-    final roleBadge = _user?.role ?? '';
-
->>>>>>> Stashed changes
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -86,76 +45,12 @@ class _ProfilePageState extends State<ProfilePage> {
             const Text('Seu perfil', style: AppTextStyles.heading1),
             const SizedBox(height: 18),
 
-<<<<<<< Updated upstream
 
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: AppColors.primaryTeal,
                 borderRadius: BorderRadius.circular(24),
-=======
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryTeal,
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: Row(
-                  children: [
-                    NetworkAvatar(
-                      imageUrl: avatar,
-                      name: name,
-                      size: 72,
-                      borderRadius: 20,
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            name,
-                            style: const TextStyle(
-                              fontFamily: AppTextStyles.serifFamily,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            email,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: AppColors.textWhite70,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          if (roleBadge.isNotEmpty) ...[
-                            const SizedBox(height: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(999),
-                              ),
-                              child: Text(
-                                roleBadge,
-                                style: const TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.accentGoldLight,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
->>>>>>> Stashed changes
               ),
               child: Row(
                 children: [

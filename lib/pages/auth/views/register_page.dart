@@ -3,7 +3,6 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/brand_logo.dart';
 import '../../../services/auth_service.dart';
-import '../../../services/specialist_service.dart';
 
 class RegisterPage extends StatefulWidget {
   final String role;
@@ -51,14 +50,6 @@ class _RegisterPageState extends State<RegisterPage> {
         password: _passwordController.text,
         role: widget.role,
       );
-      if (widget.role.toUpperCase() == 'COUNSELOR') {
-        await SpecialistService.createMyProfile(
-          title: 'Conselheiro',
-          specialty: 'Gestão',
-          bio: 'Conselheiro verificado na plataforma Sábios.',
-          hourlyRate: 150.0,
-        );
-      }
       if (mounted) widget.onContinue();
     } catch (e) {
       if (!mounted) return;
