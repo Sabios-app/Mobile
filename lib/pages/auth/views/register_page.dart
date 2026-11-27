@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/brand_logo.dart';
@@ -38,7 +39,6 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
-
   Future<void> _handleSubmit() async {
     if (_isLoading || !(_formKey.currentState?.validate() ?? false)) return;
 
@@ -53,9 +53,8 @@ class _RegisterPageState extends State<RegisterPage> {
       if (mounted) widget.onContinue();
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -80,7 +79,6 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           child: Column(
             children: [
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -109,7 +107,6 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
               ),
 
-
               Expanded(
                 child: SingleChildScrollView(
                   child: Form(
@@ -118,7 +115,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 32),
-
 
                         const Text(
                           'SUA JORNADA COMEÇA AQUI',
@@ -146,59 +142,61 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         const SizedBox(height: 28),
 
-
                         _buildFieldLabel('Como se chama?'),
                         const SizedBox(height: 8),
                         TextFormField(
                           controller: _nameController,
                           decoration: _inputDecoration('Seu nome completo'),
-                          validator: (value) => (value == null || value.trim().isEmpty)
+                          validator: (value) =>
+                              (value == null || value.trim().isEmpty)
                               ? 'Informe seu nome completo'
                               : null,
                         ),
                         const SizedBox(height: 18),
-
 
                         _buildFieldLabel('Seu e-mail'),
                         const SizedBox(height: 8),
                         TextFormField(
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
-                          decoration: _inputDecoration('voce@seunegocio.com.br'),
-                          validator: (value) => (value == null || !value.contains('@'))
+                          decoration: _inputDecoration(
+                            'voce@seunegocio.com.br',
+                          ),
+                          validator: (value) =>
+                              (value == null || !value.contains('@'))
                               ? 'Informe um e-mail válido'
                               : null,
                         ),
                         const SizedBox(height: 18),
-
 
                         _buildFieldLabel('Senha'),
                         const SizedBox(height: 8),
                         TextFormField(
                           controller: _passwordController,
                           obscureText: _obscurePassword,
-                          decoration: _inputDecoration('No mínimo 6 caracteres').copyWith(
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined,
-                                color: AppColors.textPlaceholder,
-                                size: 20,
+                          decoration: _inputDecoration('No mínimo 6 caracteres')
+                              .copyWith(
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _obscurePassword
+                                        ? Icons.visibility_outlined
+                                        : Icons.visibility_off_outlined,
+                                    color: AppColors.textPlaceholder,
+                                    size: 20,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _obscurePassword = !_obscurePassword;
+                                    });
+                                  },
+                                ),
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  _obscurePassword = !_obscurePassword;
-                                });
-                              },
-                            ),
-                          ),
-                          validator: (value) => (value == null || value.length < 6)
+                          validator: (value) =>
+                              (value == null || value.length < 6)
                               ? 'A senha deve ter no mínimo 6 caracteres'
                               : null,
                         ),
                         const SizedBox(height: 28),
-
 
                         SizedBox(
                           width: double.infinity,
@@ -212,7 +210,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18),
                               ),
-                              shadowColor: AppColors.primaryTeal.withValues(alpha: 0.25),
+                              shadowColor: AppColors.primaryTeal.withValues(
+                                alpha: 0.25,
+                              ),
                             ),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -231,7 +231,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ),
                         const SizedBox(height: 16),
-
 
                         Center(
                           child: GestureDetector(
@@ -265,7 +264,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
               ),
-
 
               const Padding(
                 padding: EdgeInsets.only(top: 12),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../core/network/api_client.dart';
-import '../../../core/network/api_endpoints.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/network_avatar.dart';
+import '../../../services/mentoring_service.dart';
 
 class Mentor {
   final String id;
@@ -67,8 +67,6 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
   List<DateTime> _availableSlots = [];
   bool _loadingSlots = true;
   bool _confirmed = false;
-<<<<<<< Updated upstream
-=======
   bool _isSubmitting = false;
   String? _errorMessage;
 
@@ -91,8 +89,6 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
     final d = date.day.toString().padLeft(2, '0');
     return '$y-$m-$d';
   }
-
-
 
   Set<String> get _availableDayKeys {
     return _availableSlots.map((dt) => _formatIsoDate(dt)).toSet();
@@ -139,7 +135,8 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
   }
 
   DateTime? _parseSpecialistLocalDateTime(String raw) {
-    final match = RegExp(r'^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})').firstMatch(raw.trim());
+    final match =
+    RegExp(r'^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})').firstMatch(raw.trim());
     if (match == null) return DateTime.tryParse(raw)?.toLocal();
     return DateTime(
       int.parse(match.group(1)!),
@@ -201,7 +198,8 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
     final dayKeys = _availableDayKeys;
     if (dayKeys.isEmpty) {
       setState(() {
-        _errorMessage = 'Este especialista não possui dias disponíveis nos próximos 30 dias.';
+        _errorMessage =
+        'Este especialista não possui dias disponíveis nos próximos 30 dias.';
       });
       return;
     }
@@ -214,7 +212,8 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
     final firstDate = sortedDates.first;
     final lastDate = sortedDates.last;
 
-    DateTime safeInitial = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
+    DateTime safeInitial =
+    DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
     if (safeInitial.isBefore(firstDate) ||
         safeInitial.isAfter(lastDate) ||
         !dayKeys.contains(_formatIsoDate(safeInitial))) {
@@ -311,7 +310,6 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
       });
     }
   }
->>>>>>> Stashed changes
 
   @override
   Widget build(BuildContext context) {
@@ -322,7 +320,9 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
         left: 20,
         right: 20,
         top: 14,
-        bottom: 24 + MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).padding.bottom,
+        bottom: 24 +
+            MediaQuery.of(context).viewInsets.bottom +
+            MediaQuery.of(context).padding.bottom,
       ),
       decoration: const BoxDecoration(
         color: AppColors.background,
@@ -335,29 +335,10 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
           ),
         ],
       ),
-<<<<<<< Updated upstream
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-
-          Container(
-            width: 48,
-            height: 5,
-            decoration: BoxDecoration(
-              color: AppColors.primaryTeal.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(999),
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          if (_confirmed) ...[
-
-=======
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
->>>>>>> Stashed changes
             Container(
               width: 48,
               height: 5,
@@ -365,126 +346,8 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
                 color: AppColors.primaryTeal.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(999),
               ),
-<<<<<<< Updated upstream
-              alignment: Alignment.center,
-              child: const Icon(
-                Icons.check_rounded,
-                color: AppColors.successText,
-                size: 34,
-              ),
-            ),
-            const SizedBox(height: 18),
-            const Text(
-              'Horário reservado',
-              style: TextStyle(
-                fontFamily: AppTextStyles.serifFamily,
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Sua sessão com ${widget.mentor.name} foi adicionada à agenda para ${widget.mentor.available.toLowerCase()}.',
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 14,
-                height: 1.5,
-                color: AppColors.textMuted,
-              ),
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: widget.onClose,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryTeal,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18),
-                  ),
-                ),
-                child: const Text(
-                  'Concluir',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-            ),
-          ] else ...[
-
-            Row(
-              children: [
-                NetworkAvatar(
-                  imageUrl: widget.mentor.image,
-                  name: widget.mentor.name,
-                  size: 76,
-                  borderRadius: 22,
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.mentor.name,
-                        style: const TextStyle(
-                          fontFamily: AppTextStyles.serifFamily,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        widget.mentor.role,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.accentAmber,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.star_rounded,
-                            size: 16,
-                            color: AppColors.accentOchre,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${widget.mentor.rating} • ${widget.mentor.sessions}',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.textMuted,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
             ),
             const SizedBox(height: 20),
-
-
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppColors.borderLight),
-=======
-            ),
-            const SizedBox(height: 20),
-
             if (_confirmed) ...[
               Container(
                 width: 64,
@@ -499,7 +362,6 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
                   color: AppColors.successText,
                   size: 34,
                 ),
->>>>>>> Stashed changes
               ),
               const SizedBox(height: 18),
               const Text(
@@ -601,33 +463,6 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
                 ],
               ),
               const SizedBox(height: 18),
-
-<<<<<<< Updated upstream
-
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _confirmed = true;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryTeal,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18),
-                  ),
-                ),
-                child: const Text(
-                  'Reservar este horário',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
-                  ),
-=======
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -687,7 +522,6 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
                       ],
                     ),
                     const SizedBox(height: 10),
-
                     if (_loadingSlots)
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
@@ -736,24 +570,9 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
                         ),
                       ),
                   ],
->>>>>>> Stashed changes
                 ),
               ),
               const SizedBox(height: 12),
-
-<<<<<<< Updated upstream
-
-            SizedBox(
-              width: double.infinity,
-              child: TextButton(
-                onPressed: widget.onClose,
-                child: const Text(
-                  'Agora não',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textMuted,
-=======
               TextField(
                 controller: _titleController,
                 decoration: InputDecoration(
@@ -763,12 +582,10 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: const BorderSide(color: AppColors.borderLight),
->>>>>>> Stashed changes
                   ),
                 ),
               ),
               const SizedBox(height: 10),
-
               TextField(
                 controller: _doubtsController,
                 maxLines: 2,
@@ -782,7 +599,6 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
                   ),
                 ),
               ),
-
               if (_errorMessage != null) ...[
                 const SizedBox(height: 12),
                 Container(
@@ -791,7 +607,8 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
                   decoration: BoxDecoration(
                     color: Colors.red.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: Colors.redAccent.withValues(alpha: 0.4)),
+                    border:
+                    Border.all(color: Colors.redAccent.withValues(alpha: 0.4)),
                   ),
                   child: Text(
                     _errorMessage!,
@@ -803,7 +620,6 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
                   ),
                 ),
               ],
-
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
@@ -822,7 +638,10 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
                       ? const SizedBox(
                     height: 20,
                     width: 20,
-                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
                   )
                       : const Text(
                     'Reservar este horário',
@@ -834,7 +653,6 @@ class _MentorBookingSheetState extends State<MentorBookingSheet> {
                 ),
               ),
               const SizedBox(height: 6),
-
               SizedBox(
                 width: double.infinity,
                 child: TextButton(

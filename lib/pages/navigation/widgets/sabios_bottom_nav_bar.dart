@@ -4,33 +4,19 @@ import '../../../core/theme/app_colors.dart';
 class SabiosBottomNavBar extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
-<<<<<<< Updated upstream
-=======
   final int unreadMessagesCount;
   final bool isCounselor;
->>>>>>> Stashed changes
 
   const SabiosBottomNavBar({
     super.key,
     required this.currentIndex,
     required this.onTap,
-<<<<<<< Updated upstream
-=======
     this.unreadMessagesCount = 0,
     this.isCounselor = false,
->>>>>>> Stashed changes
   });
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< Updated upstream
-    final navItems = [
-      _NavItem(icon: Icons.home_outlined, activeIcon: Icons.home_rounded, label: 'Início'),
-      _NavItem(icon: Icons.search_rounded, activeIcon: Icons.search_rounded, label: 'Explorar'),
-      _NavItem(icon: Icons.calendar_today_outlined, activeIcon: Icons.calendar_today_rounded, label: 'Agenda'),
-      _NavItem(icon: Icons.chat_bubble_outline_rounded, activeIcon: Icons.chat_bubble_rounded, label: 'Mensagens', badgeCount: 2),
-      _NavItem(icon: Icons.person_outline_rounded, activeIcon: Icons.person_rounded, label: 'Perfil'),
-=======
     final badge = unreadMessagesCount > 0 ? unreadMessagesCount : null;
 
     final navItems = isCounselor
@@ -84,7 +70,6 @@ class SabiosBottomNavBar extends StatelessWidget {
         activeIcon: Icons.person_rounded,
         label: 'Perfil',
       ),
->>>>>>> Stashed changes
     ];
 
     return Container(
@@ -109,7 +94,6 @@ class SabiosBottomNavBar extends StatelessWidget {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-
                       if (isActive)
                         Positioned(
                           top: 0,
